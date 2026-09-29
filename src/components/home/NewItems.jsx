@@ -1,9 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import AuthorImage from "../../images/author_thumbnail.jpg";
-import nftImage from "../../images/nftImage.jpg";
+import OwlCarousel from "react-owl-carousel";
+import axios from "axios";
+import "./NewItems.css";
+import Countdown from "./Countdown";
 
 const NewItems = () => {
+  const [Data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function getApiData() {
+      try {
+        const { data } = await axios.get(
+          "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
+        );
+        setData(data);
+      } catch (error) {
+        console.error("Failed to load new items:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getApiData();
+  }, []);
+
+  const options = {
+    loop: true,
+    margin: 20,
+    nav: true,
+    dots: false,
+    autoplay: true,
+    autoplayTimeout: 4000,
+    autoplayHoverPause: true,
+    navText: [
+      '<i class="fa fa-chevron-left"></i>',
+      '<i class="fa fa-chevron-right"></i>',
+    ],
+    responsive: {
+      0: { items: 1 },
+      576: { items: 2 },
+      992: { items: 3 },
+      1200: { items: 4 },
+    },
+  };
+
   return (
     <section id="section-items" className="no-bottom">
       <div className="container">
@@ -14,9 +55,25 @@ const NewItems = () => {
               <div className="small-border bg-color-2"></div>
             </div>
           </div>
-          {new Array(4).fill(0).map((_, index) => (
-            <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
-              <div className="nft__item">
+        </div>
+
+        {loading ? (
+          <div className="row">
+            {new Array(4).fill(0).map((_, index) => (
+              <div className="col-lg-3 col-md-6 col-sm-6 col-xs-12" key={index}>
+                <div className="nft__item skeleton-card">
+                  <div className="skeleton skeleton-image"></div>
+                  <div className="skeleton skeleton-avatar"></div>
+                  <div className="skeleton skeleton-title"></div>
+                  <div className="skeleton skeleton-subtitle"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <OwlCarousel className="owl-theme new-items" {...options}>
+            {Data.map((card, index) => (
+              <div className="nft__item" key={card.id || index}>
                 <div className="author_list_pp">
                   <Link
                     to="/author"
@@ -24,11 +81,11 @@ const NewItems = () => {
                     data-bs-placement="top"
                     title="Creator: Monica Lucas"
                   >
-                    <img className="lazy" src={AuthorImage} alt="" />
+                    <img className="lazy" src={card.authorImage} alt="" />
                     <i className="fa fa-check"></i>
                   </Link>
                 </div>
-                <div className="de_countdown">5h 30m 32s</div>
+                <div className="de_countdown"><Countdown expiryDate={card.expiryDate} /></div>
 
                 <div className="nft__item_wrap">
                   <div className="nft__item_extra">
@@ -51,7 +108,7 @@ const NewItems = () => {
 
                   <Link to="/item-details">
                     <img
-                      src={nftImage}
+                      src={card.nftImage}
                       className="lazy nft__item_preview"
                       alt=""
                     />
@@ -59,18 +116,18 @@ const NewItems = () => {
                 </div>
                 <div className="nft__item_info">
                   <Link to="/item-details">
-                    <h4>Pinky Ocean</h4>
+                    <h4>{card.title}</h4>
                   </Link>
-                  <div className="nft__item_price">3.08 ETH</div>
+                  <div className="nft__item_price">{card.price} Eth </div>
                   <div className="nft__item_like">
                     <i className="fa fa-heart"></i>
-                    <span>69</span>
+                    <span>{card.likes}</span>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </OwlCarousel>
+        )}
       </div>
     </section>
   );
