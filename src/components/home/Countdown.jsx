@@ -8,7 +8,7 @@ const Countdown = ({ expiryDate }) => {
       setTimeLeft(calculateTimeLeft(expiryDate));
     }, 1000);
 
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval); // cleanup when component unmounts
   }, [expiryDate]);
 
   if (timeLeft.expired) {

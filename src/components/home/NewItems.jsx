@@ -5,6 +5,7 @@ import axios from "axios";
 import "./NewItems.css";
 import Countdown from "./Countdown";
 
+
 const NewItems = () => {
   const [Data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,6 +16,7 @@ const NewItems = () => {
         const { data } = await axios.get(
           "https://us-central1-nft-cloud-functions.cloudfunctions.net/newItems"
         );
+      
         setData(data);
       } catch (error) {
         console.error("Failed to load new items:", error);
@@ -85,7 +87,7 @@ const NewItems = () => {
                     <i className="fa fa-check"></i>
                   </Link>
                 </div>
-                <div className="de_countdown"><Countdown expiryDate={card.expiryDate} /></div>
+                <div className="de_countdown"><Countdown expiryDate ={card.expiryDate}/></div>
 
                 <div className="nft__item_wrap">
                   <div className="nft__item_extra">
