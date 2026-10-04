@@ -1,10 +1,20 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 import AuthorBanner from "../images/author_banner.jpg";
 import AuthorItems from "../components/author/AuthorItems";
 import { Link } from "react-router-dom";
 import AuthorImage from "../images/author_thumbnail.jpg";
+import axios from "axios";
 
 const Author = () => {
+  const { authorId } = useParams();
+async function fetchAuthorData() {
+const { data } = await axios.get(`https://us-central1-nft-cloud-functions.cloudfunctions.net/hotCollections`)
+const match = data.find((author) => String(author.authorId) === authorId)
+console.log(match)
+  }
+
+  fetchAuthorData();
   return (
     <div id="wrapper">
       <div className="no-bottom no-top" id="content">
