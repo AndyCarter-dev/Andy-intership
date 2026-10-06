@@ -1,0 +1,33 @@
+.skeleton-avatar-lg {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: block;
+}
+
+.skeleton-name-lg {
+  width: 180px;
+  height: 22px;
+  margin: 16px 0 8px;
+  display: block;
+}
+
+.skeleton-address {
+  width: 260px;
+  height: 14px;
+  display: block;
+}
+
+.skeleton-followers {
+  width: 100px;
+  height: 14px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.skeleton-button {
+  width: 100px;
+  height: 38px;
+  border-radius: 6px;
+  display: block;
+}
