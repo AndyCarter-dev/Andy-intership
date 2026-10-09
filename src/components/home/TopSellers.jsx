@@ -1,23 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./TopSellers.css";
+import Reveal from "../Reveal";
+
 const TopSellers = () => {
-  const [topSellers, setTopSellers] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [topSellers, setTopSellers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  async function fetchData() {
-    try {
-      const { data } = await axios.get('https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers');
-      setTopSellers(data);
-    } catch (error) {
-      console.error('Failed to load top sellers:', error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const { data } = await axios.get(
+          "https://us-central1-nft-cloud-functions.cloudfunctions.net/topSellers"
+        );
+        setTopSellers(data);
+      } catch (error) {
+        console.error("Failed to load top sellers:", error);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
-
-  React.useEffect(() => {
     fetchData();
   }, []);
 
@@ -26,10 +29,10 @@ const TopSellers = () => {
       <div className="container">
         <div className="row">
           <div className="col-lg-12">
-            <div className="text-center">
+            <Reveal className="text-center">
               <h2>Top Sellers</h2>
               <div className="small-border bg-color-2"></div>
-            </div>
+            </Reveal>
           </div>
           <div className="col-md-12">
             <ol className="author_list">
@@ -46,7 +49,11 @@ const TopSellers = () => {
                     </li>
                   ))
                 : topSellers.map((seller, index) => (
-                    <li key={seller.authorId || index}>
+                    <Reveal
+                      as="li"
+                      key={seller.authorId || index}
+                      delay={(index % 4) * 80}
+                    >
                       <div className="author_list_pp">
                         <Link to={`/author/${seller.authorId}`}>
                           <img
@@ -61,7 +68,7 @@ const TopSellers = () => {
                         <Link to={`/author/${seller.authorId}`}>{seller.name}</Link>
                         <span>{seller.price} ETH</span>
                       </div>
-                    </li>
+                    </Reveal>
                   ))}
             </ol>
           </div>
